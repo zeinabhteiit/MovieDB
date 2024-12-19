@@ -8,8 +8,8 @@ However, and this is important to understand, we will *not* create a front end i
 
 ## Instructions
 
-- Do a `git pull` inside the Submission repo
-- Go to Submissions/Challenge/movie-database
+- Do a `git pull` inside the repo
+- Go to movie-database.md
 - COMMIT AFTER EACH STEP, call each commit by the name of the step
 
 ## Goals:

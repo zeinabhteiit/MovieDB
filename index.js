@@ -19,3 +19,22 @@ app.get('/time', (req, res) => { //TIME
     const time = `${now.getHours()}:${now.getMinutes()} `;
     res.json({ status: 200, message: time });
 });
+
+app.get('/hello/:id?', (req, res) => { //hello /id
+    const id = req.params.id || ''; // Optional ID
+    res.json({ status: 200, message:` Hello, ${id}` });
+});
+
+
+app.get('/search', (req, res) => {  //search
+    const searchQuery = req.query.s; // Extract query parameter 's'
+    if (searchQuery) {
+        res.json({ status: 200, message: 'ok', data: searchQuery });
+    } else {
+        res.status(500).json({
+            status: 500,
+            error: true,
+            message: 'you have to provide a search',
+        });
+    }
+});

@@ -40,19 +40,30 @@ app.get('/search', (req, res) => {  //search
 });
 
 const movies = [   // movie array
-    { title: 'Jaws', year: 1975, rating: 8 },
-    { title: 'Avatar', year: 2009, rating: 7.8 },
-    { title: 'Brazil', year: 1985, rating: 8 },
-    { title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2 }
+    { id: 1, title: 'Jaws', year: 1975, rating: 8 },
+    { id: 2, title: 'Avatar', year: 2009, rating: 7.8 },
+    { id: 3, title: 'Brazil', year: 1985, rating: 8 },
+    { id: 4, title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2 }
 ];
 
-
+// crud routes // movies/create
 app.get('/movies/create', (req, res) => { 
     res.json({ status: 200, message: "Movies create route" });
 });
 
-app.get('/movies/read', (req, res) => {
-    res.json({ status: 200, data: movies });
+app.get('/movies/read/id/:id', (req, res) => {
+    const movieId = parseInt(req.params.id);  //extracts id from url
+    const movie = movies.find((m) => m.id === movieId); // find movie by id
+
+    if (movie) {
+        res.status(200).json({ status: 200, data: movie });
+    } else { // if movie does not exist
+        res.status(404).json({
+            status: 404,
+            error: true,
+            message: `The movie ${movieId} does not exist`
+        });
+    }
 });
 
 app.get('/movies/update', (req, res) => {
@@ -78,3 +89,4 @@ app.get('/movies/read/by-title', (req, res) => {
     const moviesByTitle = [...movies].sort((a, b) => a.title.localeCompare(b.title));
     res.json({ status: 200, data: moviesByTitle });
 });
+

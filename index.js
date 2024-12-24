@@ -15,27 +15,27 @@ app.get('/test', (req, res) => { //TEST
 });
 
 app.get('/time', (req, res) => { //TIME
-    const now = new Date();
-    const time = `${now.getHours()}:${now.getMinutes()} `;
-    res.json({ status: 200, message: time });
+    const now = new Date();  //gets the curr data and time
+    const time = `${now.getHours()}:${now.getMinutes()} `; // formats time as hh:mm
+    res.json({ status: 200, message: time }); // responds with curr time
 });
 
 app.get('/hello/:id?', (req, res) => { //hello /id
-    const id = req.params.id || ''; // Optional ID
+    const id = req.params.id || ''; // 
     res.json({ status: 200, message:` Hello, ${id}` });
-});
+}); // responds with hello .id. , if no id hello,
 
 
 app.get('/search', (req, res) => {  //search
     const searchQuery = req.query.s; // Extract query parameter 's'
     if (searchQuery) {
-        res.json({ status: 200, message: 'ok', data: searchQuery });
+        res.json({ status: 200, message: 'ok', data: searchQuery }); // if s is provided ,respond with its value
     } else {
         res.status(500).json({
             status: 500,
             error: true,
             message: 'you have to provide a search',
-        });
+        }); // if s is missing ,respond with an error
     }
 });
 
@@ -55,9 +55,9 @@ app.get('/movies/read/id/:id', (req, res) => {
     const movieId = parseInt(req.params.id);  //extracts id from url
     const movie = movies.find((m) => m.id === movieId); // find movie by id
 
-    if (movie) {
+    if (movie) { // if movie exists , respond with its details
         res.status(200).json({ status: 200, data: movie });
-    } else { // if movie does not exist
+    } else { // if movie doesnt exist, respond with a 404 error
         res.status(404).json({
             status: 404,
             error: true,
@@ -74,19 +74,46 @@ app.get('/movies/delete', (req, res) => {
     res.json({ status: 200, message: "Movies delete route" });
 });
 
-// Route: /movies/read/by-date
+
+// Route /movies/read/by-date
 app.get('/movies/read/by-date', (req, res) => {
-    const moviesByDate = [...movies].sort((a, b) => a.year - b.year);
-    res.json({ status: 200, data: moviesByDate });
+    const moviesByDate = [...movies].sort((a, b) => a.year - b.year); //sorts year by ascending order
+    res.json({ status: 200, data: moviesByDate }); //responds with sorted movie list
 });
 
 app.get('/movies/read/by-rating', (req, res) => {
-    const moviesByRating = [...movies].sort((a, b) => b.rating - a.rating);
-    res.json({ status: 200, data: moviesByRating });
+    const moviesByRating = [...movies].sort((a, b) => b.rating - a.rating); //sorts by rating order
+    res.json({ status: 200, data: moviesByRating }); 
 });
 
 app.get('/movies/read/by-title', (req, res) => {
-    const moviesByTitle = [...movies].sort((a, b) => a.title.localeCompare(b.title));
+    const moviesByTitle = [...movies].sort((a, b) => a.title.localeCompare(b.title)); //alphabetically by title
     res.json({ status: 200, data: moviesByTitle });
 });
 
+//step 8
+// Route: /movies/add
+app.get('/movies/add', (req, res) => {
+    const { title, year, rating } = req.query;
+ // Validation checks
+ if (!title || !year || isNaN(year) || year.length !== 4) {
+     return res.status(403).json({
+         status: 403,
+         error: true,
+         message: 'You cannot create a movie without providing a title and a valid year'
+         });
+    }
+ // Default rating if not provided
+   const newRating = rating ? parseFloat(rating) : 4;
+// Create new movie
+    const newMovie = {
+        id: movies.length + 1, // Auto-generate ID
+        title,
+        year: parseInt(year),
+        rating: newRating
+    };
+ // Add new movie to the array
+    movies.push(newMovie);
+// Respond with the updated movies list
+    res.status(200).json({ status: 200, data: movies });
+})

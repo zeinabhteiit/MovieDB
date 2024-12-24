@@ -66,9 +66,33 @@ app.get('/movies/read/id/:id', (req, res) => {
     }
 });
 
-app.get('/movies/update', (req, res) => {
-    res.json({ status: 200, message: "Movies update route" });
-});
+    app.get('/movies/update/:id', (req, res) => {
+        const movieId = parseInt(req.params.id); // Extract the movie ID from the URL
+        const movie = movies.find((m) => m.id === movieId); // Find the movie with the given ID
+    
+        if (movie) {
+            // Extract query parameters for updates
+            const { title, year, rating } = req.query;
+    
+            // Update the fields if provided
+            if (title) movie.title = title;
+            if (year && /^\d{4}$/.test(year)) movie.year = parseInt(year); // Ensure the year is a 4-digit number
+            if (rating && !isNaN(rating)) movie.rating = parseFloat(rating);
+    
+            // Respond with the updated list of movies
+            res.status(200).json({
+                status: 200,
+                data: movies,
+            });
+        } else {
+            // Movie with the given ID does not exist
+            res.status(404).json({
+                status: 404,
+                error: true,
+                message:` The movie ${movieId} does not exist` ,
+            });
+        }
+    });
 
 app.get('/movies/delete/:id', (req, res) => {
     const movieId = parseInt(req.params.id); // Extract the ID from the URL

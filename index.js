@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 
+//root
 app.get('/', (req, res) => {
     res.send('ok');
 });
@@ -10,8 +11,14 @@ app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-app.get('/test', (req, res) => { //TEST
-    res.json({ status: 200, message: 'ok' });
+//test
+// app.get('/test', (req, res) => { //TEST
+//     res.json({ status: 200, message: 'ok' });
+// });
+
+//step 11
+app.get('/movies', (req, res) => { 
+    res.json({ status: 200, data: 'movies' });
 });
 
 app.get('/time', (req, res) => { //TIME
@@ -25,8 +32,8 @@ app.get('/hello/:id?', (req, res) => { //hello /id
     res.json({ status: 200, message:` Hello, ${id}` });
 }); // responds with hello .id. , if no id hello,
 
-
-app.get('/search', (req, res) => {  //search
+// search
+app.get('/search', (req, res) => {  
     const searchQuery = req.query.s; // Extract query parameter 's'
     if (searchQuery) {
         res.json({ status: 200, message: 'ok', data: searchQuery }); // if s is provided ,respond with its value
@@ -66,7 +73,7 @@ app.get('/movies/read/id/:id', (req, res) => {
     }
 });
 
-    app.get('/movies/update/:id', (req, res) => {
+    app.put('/movies/:id', (req, res) => {
         const movieId = parseInt(req.params.id); // Extract the movie ID from the URL
         const movie = movies.find((m) => m.id === movieId); // Find the movie with the given ID
     
@@ -94,7 +101,7 @@ app.get('/movies/read/id/:id', (req, res) => {
         }
     });
 
-app.get('/movies/delete/:id', (req, res) => {
+app.delete('/movies/:id', (req, res) => {
     const movieId = parseInt(req.params.id); // Extract the ID from the URL
     const movieIndex = movies.findIndex((m) => m.id === movieId); // Find the index of the movie with the given ID
 
@@ -134,7 +141,7 @@ app.get('/movies/read/by-title', (req, res) => {
 
 //step 8
 // Route: /movies/add
-app.get('/movies/add', (req, res) => {
+app.post('/movies', (req, res) => {
     const { title, year, rating } = req.query;
  // Validation checks
  if (!title || !year || isNaN(year) || year.length !== 4) {
@@ -159,4 +166,5 @@ app.get('/movies/add', (req, res) => {
     res.status(200).json({ status: 200, data: movies });
 })
 
-
+//step 10
+app.use(express.json());
